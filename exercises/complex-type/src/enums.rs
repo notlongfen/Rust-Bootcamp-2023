@@ -1,6 +1,9 @@
+use core::num;
+
 // Exercise 1
 // Fill in the blank and fix the errors
 // Make it compile
+#[derive(Debug)]
 enum MessageOne {
     Quit,
     Move { x: i32, y: i32 },
@@ -8,11 +11,11 @@ enum MessageOne {
     ChangeColor(i32, i32, i32),
 }
 fn show_message(msg: MessageOne) {
-    println!("{}", msg);
+    println!("{:?}", msg);
 }
 
 fn exercise1() {
-    let msgs: __ = [
+    let msgs: [MessageOne; 3] = [
         MessageOne::Quit,
         MessageOne::Move { x: 1, y: 3 },
         MessageOne::ChangeColor(255, 255, 0),
@@ -29,6 +32,10 @@ fn exercise1() {
 // Run tests
 enum Message {
     // TODO: implement the message variant types based on their usage below
+    ChangeColor(u8,u8,u8),
+    Echo(String),
+    Move(Point),
+    Quit(),
 }
 
 struct Point {
@@ -62,6 +69,12 @@ impl State {
     fn process(&mut self, message: Message) {
         // TODO: create a match expression to process the different message variants
         // Remember: When passing a tuple as a function argument, you'll need extra parentheses: fn function((t, u, p, l, e))
+        match message{
+            Message::ChangeColor(r, g, b) => self.change_color((r, g, b)),
+            Message::Echo(s) => self.echo(s),
+            Message::Move (Point) => self.move_position(Point),
+            Message::Quit() => self.quit(),
+        }
     }
 }
 
@@ -69,17 +82,22 @@ impl State {
 // Exercise 3
 // Fix the errors
 // Run tests
+#[derive(PartialEq)]
+#[derive(Debug)]
 enum Direction {
     North,
     East,
     South,
     West,
 }
-
 impl Direction {
     fn opposite(&self) -> Direction {
         match self {
             //TODO
+            Direction::North => Direction::South,
+            Direction::East => Direction::West,
+            Direction::South => Direction::North,
+            Direction::West => Direction::East,
         }
     }
 }
@@ -100,6 +118,10 @@ enum Operation {
 fn perform_operation(operation: Operation, num1: f64, num2: f64) -> f64 {
     match operation {
         // TODO
+        Operation::Add => num1 + num2,
+        Operation::Subtract => num1 - num2,
+        Operation::Multiply => num1 * num2,
+        Operation::Divide => num1 / num2, 
     }
 }
 
@@ -120,7 +142,7 @@ mod tests {
         state.process(Message::ChangeColor(255, 0, 255));
         state.process(Message::Echo(String::from("hello world")));
         state.process(Message::Move(Point { x: 10, y: 15 }));
-        state.process(Message::Quit);
+        state.process(Message::Quit());
 
         assert_eq!(state.color, (255, 0, 255));
         assert_eq!(state.position.x, 10);
